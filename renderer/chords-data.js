@@ -1,0 +1,111 @@
+export const CHORDS = [
+  // ===== C =====
+  { name: 'C',     root: 'C', frets: [-1, 3, 2, 0, 1, 0],  startFret: 1 },
+  { name: 'C#',    root: 'C', frets: [-1, 4, 3, 1, 2, 1],  startFret: 1 },
+  { name: 'Cm',    root: 'C', frets: [-1, 3, 5, 5, 4, 3],  startFret: 1 },
+  { name: 'C#m',   root: 'C', frets: [-1, 4, 6, 6, 5, 4],  startFret: 1 },
+  { name: 'C7',    root: 'C', frets: [-1, 3, 2, 3, 1, 0],  startFret: 1 },
+  { name: 'Cmaj7', root: 'C', frets: [-1, 3, 2, 0, 0, 0],  startFret: 1 },
+  { name: 'Cm7',   root: 'C', frets: [-1, 3, 5, 3, 4, 3],  startFret: 1 },
+  { name: 'Csus2', root: 'C', frets: [-1, 3, 0, 0, 1, 0],  startFret: 1 },
+  { name: 'Csus4', root: 'C', frets: [-1, 3, 3, 0, 1, 1],  startFret: 1 },
+  { name: 'Cadd9', root: 'C', frets: [-1, 3, 2, 0, 3, 0],  startFret: 1 },
+
+  // ===== D =====
+  { name: 'D',     root: 'D', frets: [-1, -1, 0, 2, 3, 2], startFret: 1 },
+  { name: 'D#',    root: 'D', frets: [-1, -1, 1, 3, 4, 3], startFret: 1 },
+  { name: 'Dm',    root: 'D', frets: [-1, -1, 0, 2, 3, 1], startFret: 1 },
+  { name: 'D#m',   root: 'D', frets: [-1, -1, 1, 3, 4, 2], startFret: 1 },
+  { name: 'D7',    root: 'D', frets: [-1, -1, 0, 2, 1, 2], startFret: 1 },
+  { name: 'Dmaj7', root: 'D', frets: [-1, -1, 0, 2, 2, 2], startFret: 1 },
+  { name: 'Dm7',   root: 'D', frets: [-1, -1, 0, 2, 1, 1], startFret: 1 },
+  { name: 'Dsus2', root: 'D', frets: [-1, -1, 0, 2, 3, 0], startFret: 1 },
+  { name: 'Dsus4', root: 'D', frets: [-1, -1, 0, 2, 3, 3], startFret: 1 },
+  { name: 'Dadd9', root: 'D', frets: [-1, -1, 0, 2, 3, 2], startFret: 1 },
+
+  // ===== E =====
+  { name: 'E',     root: 'E', frets: [0, 2, 2, 1, 0, 0],   startFret: 1 },
+  { name: 'Em',    root: 'E', frets: [0, 2, 2, 0, 0, 0],   startFret: 1 },
+  { name: 'E7',    root: 'E', frets: [0, 2, 0, 1, 0, 0],   startFret: 1 },
+  { name: 'Emaj7', root: 'E', frets: [0, 2, 1, 1, 0, 0],   startFret: 1 },
+  { name: 'Em7',   root: 'E', frets: [0, 2, 2, 0, 3, 0],   startFret: 1 },
+  { name: 'Esus2', root: 'E', frets: [0, 2, 4, 4, 0, 0],   startFret: 1 },
+  { name: 'Esus4', root: 'E', frets: [0, 2, 2, 2, 0, 0],   startFret: 1 },
+
+  // ===== F =====
+  { name: 'F',     root: 'F', frets: [1, 3, 3, 2, 1, 1],   startFret: 1 },
+  { name: 'F#',    root: 'F', frets: [2, 4, 4, 3, 2, 2],   startFret: 1 },
+  { name: 'Fm',    root: 'F', frets: [1, 3, 3, 1, 1, 1],   startFret: 1 },
+  { name: 'F#m',   root: 'F', frets: [2, 4, 4, 2, 2, 2],   startFret: 1 },
+  { name: 'F7',    root: 'F', frets: [1, 3, 1, 2, 1, 1],   startFret: 1 },
+  { name: 'Fmaj7', root: 'F', frets: [1, 3, 3, 2, 1, 0],   startFret: 1 },
+  { name: 'Fm7',   root: 'F', frets: [1, 3, 1, 1, 1, 1],   startFret: 1 },
+  { name: 'Fsus2', root: 'F', frets: [1, 3, 3, 0, 1, 1],   startFret: 1 },
+  { name: 'Fsus4', root: 'F', frets: [1, 3, 3, 3, 1, 1],   startFret: 1 },
+
+  // ===== G =====
+  { name: 'G',     root: 'G', frets: [3, 2, 0, 0, 0, 3],   startFret: 1 },
+  { name: 'G#',    root: 'G', frets: [4, 3, 1, 1, 1, 4],   startFret: 1 },
+  { name: 'Gm',    root: 'G', frets: [3, 5, 5, 3, 3, 3],   startFret: 3 },
+  { name: 'G#m',   root: 'G', frets: [4, 6, 6, 4, 4, 4],   startFret: 4 },
+  { name: 'G7',    root: 'G', frets: [3, 2, 0, 0, 0, 1],   startFret: 1 },
+  { name: 'Gmaj7', root: 'G', frets: [3, 2, 0, 0, 0, 2],   startFret: 1 },
+  { name: 'Gm7',   root: 'G', frets: [3, 5, 3, 3, 3, 3],   startFret: 3 },
+  { name: 'Gsus2', root: 'G', frets: [3, 0, 0, 0, 3, 3],   startFret: 1 },
+  { name: 'Gsus4', root: 'G', frets: [3, 3, 0, 0, 1, 3],   startFret: 1 },
+  { name: 'Gadd9', root: 'G', frets: [3, 2, 0, 2, 0, 3],   startFret: 1 },
+
+  // ===== A =====
+  { name: 'A',     root: 'A', frets: [-1, 0, 2, 2, 2, 0],  startFret: 1 },
+  { name: 'A#',    root: 'A', frets: [-1, 1, 3, 3, 3, 1],  startFret: 1 },
+  { name: 'Am',    root: 'A', frets: [-1, 0, 2, 2, 1, 0],  startFret: 1 },
+  { name: 'A#m',   root: 'A', frets: [-1, 1, 3, 3, 2, 1],  startFret: 1 },
+  { name: 'A7',    root: 'A', frets: [-1, 0, 2, 0, 2, 0],  startFret: 1 },
+  { name: 'Amaj7', root: 'A', frets: [-1, 0, 2, 1, 2, 0],  startFret: 1 },
+  { name: 'Am7',   root: 'A', frets: [-1, 0, 2, 0, 1, 0],  startFret: 1 },
+  { name: 'Asus2', root: 'A', frets: [-1, 0, 2, 2, 0, 0],  startFret: 1 },
+  { name: 'Asus4', root: 'A', frets: [-1, 0, 2, 2, 3, 0],  startFret: 1 },
+  { name: 'Aadd9', root: 'A', frets: [-1, 0, 2, 4, 2, 0],  startFret: 1 },
+
+  // ===== B =====
+  { name: 'B',     root: 'B', frets: [-1, 2, 4, 4, 4, 2],  startFret: 1 },
+  { name: 'Bm',    root: 'B', frets: [-1, 2, 4, 4, 3, 2],  startFret: 1 },
+  { name: 'B7',    root: 'B', frets: [-1, 2, 1, 2, 0, 2],  startFret: 1 },
+  { name: 'Bmaj7', root: 'B', frets: [-1, 2, 4, 3, 4, 2],  startFret: 1 },
+  { name: 'Bm7',   root: 'B', frets: [-1, 2, 0, 2, 0, 2],  startFret: 1 },
+  { name: 'Bsus2', root: 'B', frets: [-1, 2, 4, 4, 2, 2],  startFret: 1 },
+  { name: 'Bsus4', root: 'B', frets: [-1, 2, 4, 4, 5, 2],  startFret: 1 },
+
+  // ===== Power chords (5) =====
+  { name: 'E5',    root: 'E', frets: [0, 2, 2, -1, -1, -1], startFret: 1, power: true },
+  { name: 'F5',    root: 'F', frets: [1, 3, 3, -1, -1, -1], startFret: 1, power: true },
+  { name: 'F#5',   root: 'F', frets: [2, 4, 4, -1, -1, -1], startFret: 1, power: true },
+  { name: 'G5',    root: 'G', frets: [3, 5, 5, -1, -1, -1], startFret: 1, power: true },
+  { name: 'G#5',   root: 'G', frets: [4, 6, 6, -1, -1, -1], startFret: 1, power: true },
+  { name: 'A5',    root: 'A', frets: [-1, 0, 2, 2, -1, -1], startFret: 1, power: true },
+  { name: 'A#5',   root: 'A', frets: [-1, 1, 3, 3, -1, -1], startFret: 1, power: true },
+  { name: 'Bb5',   root: 'B', frets: [-1, 1, 3, 3, -1, -1], startFret: 1, power: true },
+  { name: 'B5',    root: 'B', frets: [-1, 2, 4, 4, -1, -1], startFret: 1, power: true },
+  { name: 'C5',    root: 'C', frets: [-1, 3, 5, 5, -1, -1], startFret: 1, power: true },
+  { name: 'C#5',   root: 'C', frets: [-1, 4, 6, 6, -1, -1], startFret: 1, power: true },
+  { name: 'D5',    root: 'D', frets: [-1, -1, 0, 2, 3, -1], startFret: 1, power: true },
+  { name: 'D#5',   root: 'D', frets: [-1, -1, 1, 3, 4, -1], startFret: 1, power: true },
+
+  // ===== Dim / Aug (для полноты) =====
+  { name: 'Cdim',  root: 'C', frets: [-1, 3, 4, 5, 4, -1], startFret: 1 },
+  { name: 'Caug',  root: 'C', frets: [-1, 3, 2, 1, 1, 0],  startFret: 1 },
+  { name: 'Ddim',  root: 'D', frets: [-1, -1, 0, 1, 3, 1], startFret: 1 },
+  { name: 'Daug',  root: 'D', frets: [-1, -1, 0, 3, 3, 2], startFret: 1 },
+  { name: 'Edim',  root: 'E', frets: [0, 1, 2, 0, -1, -1], startFret: 1 },
+  { name: 'Eaug',  root: 'E', frets: [0, 3, 2, 1, 1, 0],   startFret: 1 },
+  { name: 'Fdim',  root: 'F', frets: [1, 2, 3, 1, -1, -1], startFret: 1 },
+  { name: 'Faug',  root: 'F', frets: [1, 3, 3, 2, 2, 1],   startFret: 1 },
+  { name: 'Gdim',  root: 'G', frets: [3, 4, 5, 3, -1, -1], startFret: 1 },
+  { name: 'Gaug',  root: 'G', frets: [3, 2, 1, 0, 0, 3],   startFret: 1 },
+  { name: 'Adim',  root: 'A', frets: [-1, 0, 1, 2, 1, -1], startFret: 1 },
+  { name: 'Aaug',  root: 'A', frets: [-1, 0, 3, 2, 2, 1],  startFret: 1 },
+  { name: 'Bdim',  root: 'B', frets: [-1, 2, 3, 4, 3, -1], startFret: 1 },
+  { name: 'Baug',  root: 'B', frets: [-1, 2, 1, 0, 0, 3],  startFret: 1 },
+];
+
+export const ROOT_ORDER = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
