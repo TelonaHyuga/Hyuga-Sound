@@ -1,0 +1,53 @@
+{
+  "name": "hyuga-sound",
+  "version": "3.7.0",
+  "description": "Hyuga Sound - Guitar Toolkit",
+  "author": "Telona Hyuga",
+  "license": "GPL-3.0-or-later",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --linux AppImage",
+    "build:pitchy": "esbuild renderer/vendor/pitchy-entry.js --bundle --format=esm --outfile=renderer/vendor/pitchy.js"
+  },
+  "devDependencies": {
+    "electron": "^40.0.0",
+    "electron-builder": "^26.0.0",
+    "esbuild": "^0.24.0",
+    "pitchy": "^4.1.0"
+  },
+  "build": {
+    "appId": "com.hyuga.sound",
+    "productName": "Hyuga Sound",
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "build/icon.png",
+      "package.json"
+    ],
+    "linux": {
+      "target": "AppImage",
+      "category": "AudioVideo",
+      "icon": "build/icon.png",
+      "desktop": {
+        "entry": {
+          "Name": "Hyuga Sound",
+          "Comment": "Guitar Toolkit",
+          "Categories": "AudioVideo;Audio;",
+          "MimeType": "application/x-hyuga-sound;",
+          "Terminal": "false"
+        }
+      }
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "afterAllArtifactBuild": "scripts/after-build.js"
+  }
+}
