@@ -1,4 +1,4 @@
-# Hyuga-Sound
+# Hyuga-Sound - GPL-3
 Hyuga Sound - Guitar Toolkit
 
 # Init
