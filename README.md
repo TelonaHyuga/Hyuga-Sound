@@ -2,11 +2,11 @@
 Hyuga Sound - Guitar Toolkit
 
 # Init
-git clone https://github.com/TelonaHyuga/Hyuga-Sound.git
-cd Hyuga-Sound
-npm init -y
-npm install --save-dev electron electron-builder esbuild pitchy
-npm run build:pitchy
+1. git clone https://github.com/TelonaHyuga/Hyuga-Sound.git
+2. cd Hyuga-Sound
+3. npm init -y
+4. npm install --save-dev electron electron-builder esbuild pitchy
+5. npm run build:pitchy
 
 # Debug And Build
 
