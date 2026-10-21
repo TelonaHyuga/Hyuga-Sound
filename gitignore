@@ -1,0 +1,21 @@
+# Зависимости
+/node_modules
+
+# Артефакты сборки
+/dist
+/out
+/release
+
+# Генерируемое
+/renderer/vendor/pitchy.js
+
+# Тестовые сцены
+*.hsnd
+
+# Логи
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
