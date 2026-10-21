@@ -27,7 +27,7 @@ for just run - npm start
 1. chmod +x install.sh
 2. install.sh - lite install version (move desktop and icons to share directories, and add mime type)
 
--- Uninstall .desktop and svg icon --
+-- Uninstall .desktop, svg icon and XDG--
 
 1. chmod +x uninstall.sh
 2. uninstall.sh - uninstall all files, and from large verion
