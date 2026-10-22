@@ -1,6 +1,8 @@
 # Hyuga-Sound
 Hyuga Sound - Guitar Toolkit
 
+# Change language in information menu
+
 # Init
 1. git clone https://github.com/TelonaHyuga/Hyuga-Sound.git
 2. cd Hyuga-Sound
