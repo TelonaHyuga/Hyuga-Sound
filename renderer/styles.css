@@ -1075,3 +1075,28 @@ body.structure-open .top-actions { right: 400px; }
   height: auto;
   overflow: visible;
 }
+
+.first-run-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.78);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+}
+.first-run-dialog {
+  background: #1a1d22; color: #e6e8ec;
+  padding: 2rem 2.25rem; border-radius: 14px;
+  min-width: 340px; max-width: 460px; text-align: center;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.55);
+  border: 1px solid rgba(124,196,255,0.18);
+}
+.first-run-dialog h2 { margin: 0 0 .5rem; font-size: 1.15rem; }
+.first-run-sub { margin: 0 0 1rem; color: #98a2b3; font-size: .85rem; }
+.first-run-buttons { display: flex; gap: .75rem; justify-content: center; }
+.first-run-buttons .btn { min-width: 130px; padding: .65rem 1rem; font-size: .95rem; }
+
+.audio-input-container { margin-top: 1rem; display: flex; flex-direction: column; gap: .5rem; }
+.audio-input-title { font-size: .8rem; color: #98a2b3; text-transform: uppercase; letter-spacing: .04em; }
+.audio-input-select {
+  background: #14171c; color: #e6e8ec; border: 1px solid rgba(124,196,255,0.18);
+  border-radius: 8px; padding: .5rem .65rem; font: inherit;
+}

@@ -1,5 +1,6 @@
 import { PitchDetector } from "./vendor/pitchy.js";
 import { t } from './i18n.js';
+import { getUserMediaWithPreferredDevice } from './audio-input.js';
 
 const tunerNoteEl = document.getElementById('tunerNote');
 const tunerFreqEl = document.getElementById('tunerFreq');
@@ -116,8 +117,10 @@ function tunerLoop() {
 
 async function startTuner() {
   try {
-    tunerStream = await navigator.mediaDevices.getUserMedia({
-      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+    tunerStream = await getUserMediaWithPreferredDevice({
+      echoCancellation: false,
+      noiseSuppression: false,
+      autoGainControl: false
     });
     tunerAudioCtx = new AudioContext();
     await tunerAudioCtx.resume();
@@ -171,4 +174,10 @@ window.addEventListener('langchange', () => {
   } else {
     tunerCentsEl.textContent = centsLabel(lastCents);
   }
+});
+
+window.addEventListener('audioinput:changed', async () => {
+  if (!tunerActive) return;
+  stopTuner();
+  await startTuner();
 });

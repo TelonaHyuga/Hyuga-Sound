@@ -118,6 +118,12 @@ const DICT = {
     'capo.fret': 'Каподастр: {n} лад',
     'capo.prompt': 'На каком ладу каподастр?',
     'capo.invalid': 'Введите число от 0 до 12. 0 = без каподастра.',
+    
+    // ---- Устройство ввода ----
+    'about.audioInputLabel': 'Устройство ввода (микрофон)',
+    'about.audioInputDefault': 'По умолчанию (системное)',
+    'about.audioInputNoDevices': 'Нет доступных устройств',
+    'about.audioInputMicrophone': 'Микрофон {n}',
   },
 
   en: {
@@ -222,6 +228,12 @@ const DICT = {
     'capo.fret': 'Capo: fret {n}',
     'capo.prompt': 'Which fret is the capo on?',
     'capo.invalid': 'Enter a number from 0 to 12. 0 = no capo.',
+    
+    // ---- Audio input ----
+    'about.audioInputLabel': 'Input device (microphone)',
+    'about.audioInputDefault': 'Default (system)',
+    'about.audioInputNoDevices': 'No devices available',
+    'about.audioInputMicrophone': 'Microphone {n}',
   },
 };
 

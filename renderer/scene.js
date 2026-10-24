@@ -143,7 +143,7 @@ function parseHsnd(text) {
 }
 
 // ============ BUILD ============
-function buildSceneObject() {
+export function buildSceneObject() {
   return {
     format: 'hyuga-sound-scene', magic: HSND_MAGIC, version: HSND_VERSION,
     created: new Date().toISOString(), app: 'Hyuga Sound',
@@ -194,9 +194,7 @@ function exportScene() {
 }
 
 // ============ IMPORT ============
-function importScene(text) {
-  const parsed = parseHsnd(text);
-  const scene = parsed.scene;
+export function applySceneData(scene) {
   const importedVerses = Array.isArray(scene.verses)
     ? scene.verses.map(sanitizeVerse).filter(Boolean)
     : [];
@@ -216,10 +214,16 @@ function importScene(text) {
   }
   applyImportedBattle(scene.battle);
   state.structure = sanitizeStructure(scene.structure);
+  state.capo = Number(scene.capo) || 0;
   renderVerses();
   renderStructure();
+  window.dispatchEvent(new CustomEvent('capo:changed', { detail: { capo: state.capo } }));
+}
+
+function importScene(text) {
+  const parsed = parseHsnd(text);
+  applySceneData(parsed.scene);
   showToast(t('scene.imported'), 'success');
-  state.capo = Number(scene.capo) || 0;
 }
 
 // ============ CLEAR ============
