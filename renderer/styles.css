@@ -436,14 +436,13 @@ body.battle-finger .arrow-sep { height: 140px; }
 .about-overlay {
   position: fixed;
   inset: 0;
-  z-index: 200;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  z-index: 1000;
+  background: rgba(6, 12, 22, 0.6);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(140%);
 }
 .about-overlay.show { display: flex; }
 
@@ -451,13 +450,30 @@ body.battle-finger .arrow-sep { height: 140px; }
   position: relative;
   width: 100%;
   max-width: 460px;
-  background: linear-gradient(160deg, #1a1a2e, #12122a);
-  border: 1px solid var(--border);
+  overflow-y: auto;
   border-radius: var(--radius);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
   padding: 2rem 1.6rem 1.6rem;
   color: var(--text);
   text-align: center;
+  
+  background:
+    linear-gradient(
+      180deg,
+      rgba(24, 34, 52, 0.82) 0%,
+      rgba(14, 20, 32, 0.86) 100%
+    );
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  backdrop-filter: blur(22px) saturate(160%);
+
+  /* Голубоватая кромка вместо белой — сливается с акцентом #7cc4ff */
+  border: 1px solid rgba(124, 196, 255, 0.18);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(124, 196, 255, 0.06) inset,
+    0 1px 0 rgba(124, 196, 255, 0.14) inset;
+
+  color: #e6e8ec;
 }
 .about-modal h3 {
   margin: 0 0 0.8rem;
@@ -509,9 +525,9 @@ body.battle-finger .arrow-sep { height: 140px; }
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.3);
-  color: var(--muted);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e6e8ec;
   font-size: 0.8rem;
   font-weight: 800;
   cursor: pointer;
@@ -1099,4 +1115,306 @@ body.structure-open .top-actions { right: 400px; }
 .audio-input-select {
   background: #14171c; color: #e6e8ec; border: 1px solid rgba(124,196,255,0.18);
   border-radius: 8px; padding: .5rem .65rem; font: inherit;
+}
+
+/* ===== Audio Input — кнопка + дропдаун ===== */
+
+.audio-input-container {
+  margin-top: 1.25rem;
+  margin-bottom: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.audio-input-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #98a2b3;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Кнопка */
+.audio-input-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  background: #14171c;
+  border: 1px solid rgba(124, 196, 255, 0.18);
+  border-radius: 10px;
+  color: #e6e8ec;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(124, 196, 255, 0.16);
+  transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s;
+}
+
+.audio-input-btn:hover {
+  border-color: rgba(124, 196, 255, 0.4);
+  background: rgba(124, 196, 255, 0.08);
+}
+
+.audio-input-btn:focus-visible,
+.audio-input-btn.open {
+  outline: none;
+  border-color: #7cc4ff;
+  box-shadow: 0 0 0 3px rgba(124, 196, 255, 0.14);
+}
+
+.audio-input-btn-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.audio-input-btn-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.audio-input-btn-chevron {
+  font-size: 0.75rem;
+  color: #7cc4ff;
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+
+.audio-input-btn.open .audio-input-btn-chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown */
+.audio-input-dropdown {
+  position: fixed;
+  z-index: 9999;
+  background: #1a1d22;
+  border: 1px solid rgba(124, 196, 255, 0.22);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  padding: 4px;
+  max-height: 260px;
+  overflow-y: auto;
+  animation: audioDropdownIn 0.12s ease-out;
+}
+
+@keyframes audioDropdownIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.audio-input-dropdown.hidden {
+  display: none;
+}
+
+.audio-input-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #e6e8ec;
+  font: inherit;
+  font-size: 0.88rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.audio-input-option:hover,
+.audio-input-option:focus-visible {
+  background: rgba(124, 196, 255, 0.12);
+  outline: none;
+}
+
+.audio-input-option.active {
+  background: rgba(124, 196, 255, 0.18);
+  color: #7cc4ff;
+}
+
+.audio-input-option.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.audio-input-option-check {
+  width: 14px;
+  color: #7cc4ff;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.audio-input-option-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.audio-input-empty {
+  padding: 0.7rem 0.6rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-align: center;
+  font-style: italic;
+}
+
+/* ===== Анимации модалок (универсальные) ===== */
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.about-overlay,
+.chords-table-overlay,
+.input-modal-overlay {
+  animation: overlayFadeIn 0.22s ease-out;
+}
+
+.about-overlay .about-modal,
+.chords-table-overlay .chords-table-modal,
+.input-modal-overlay .input-modal {
+  animation: modalPop 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===== Язык: слайдер ===== */
+
+.lang-switch {
+  position: relative;
+  display: inline-flex;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(124, 196, 255, 0.18);
+  border-radius: 999px;
+  isolation: isolate;
+}
+
+.lang-switch::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #7cc4ff 0%, #5aa9e6 100%);
+  box-shadow: 0 2px 8px rgba(124, 196, 255, 0.3);
+  z-index: 0;
+  transform: translateX(0);
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* Двигаем ползунок вправо, если активен английский */
+.lang-switch:has([data-lang-switch="en"].active)::before {
+  transform: translateX(100%);
+}
+
+.lang-switch button {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  min-width: 90px;
+  padding: 0.4rem 0.9rem;
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  color: #98a2b3;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.lang-switch button.active {
+  color: #0b1020;     /* тёмный текст на голубой пилюле */
+  font-weight: 600;
+}
+
+/* ===== Бой: слайдер режима ===== */
+
+.battle-mode-switch {
+  position: relative;
+  display: inline-flex;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(124, 196, 255, 0.18);
+  border-radius: 999px;
+  isolation: isolate;
+}
+
+.battle-mode-switch::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #7cc4ff 0%, #5aa9e6 100%);
+  box-shadow: 0 2px 8px rgba(124, 196, 255, 0.3);
+  z-index: 0;
+  transform: translateX(0);
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.battle-mode-switch:has([data-mode="finger"].active)::before {
+  transform: translateX(100%);
+}
+
+.battle-mode-switch .btn {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  min-width: 110px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: #98a2b3;
+  transition: color 0.2s ease;
+}
+
+.battle-mode-switch .btn.active {
+  background: transparent;
+  color: #0b1020;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-overlay.active,
+  .chords-table-overlay.active,
+  .input-modal-overlay.active,
+  .about-overlay.active .about-modal,
+  .chords-table-overlay.active .chords-table-modal,
+  .input-modal-overlay.active .input-modal {
+    animation: none;
+  }
+  .lang-switch::before,
+  .battle-mode-switch::before {
+    transition: none;
+  }
 }

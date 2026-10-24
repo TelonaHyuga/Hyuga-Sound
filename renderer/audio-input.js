@@ -5,9 +5,8 @@ import { t } from './i18n.js';
 
 const STORAGE_KEY = 'hyuga.audioInputId';
 
-// Флаг: пробовали ли уже запросить разрешение в этой сессии.
-// Нужен, чтобы не показывать системный промпт при каждом перерисове.
 let permissionAttempted = false;
+let activeInstance = null;
 
 export function getSavedDeviceId() {
   return localStorage.getItem(STORAGE_KEY) || '';
@@ -26,6 +25,7 @@ export async function listAudioInputs(requestPermission = false) {
     try {
       const s = await navigator.mediaDevices.getUserMedia({ audio: true });
       s.getTracks().forEach(t => t.stop());
+      await new Promise(r => setTimeout(r, 60));
     } catch (e) {
       // Пользователь отклонил — метки останутся пустыми, это ок.
     }
@@ -53,75 +53,193 @@ export function getUserMediaWithPreferredDevice(extraAudio = {}) {
 export async function renderInputDeviceSelect(container, opts = {}) {
   if (!container) return;
 
+  if (activeInstance) {
+    activeInstance.destroy();
+    activeInstance = null;
+  }
+
   container.innerHTML = '';
   container.classList.add('audio-input-container');
 
-  const title = document.createElement('div');
-  title.className = 'audio-input-title';
-  title.textContent = opts.title || t('about.audioInputLabel');
-  container.appendChild(title);
+  const label = document.createElement('div');
+  label.className = 'audio-input-label';
+  label.textContent = opts.title || t('about.audioInputLabel');
+  container.appendChild(label);
 
-  const select = document.createElement('select');
-  select.className = 'audio-input-select';
-  select.id = 'audioInputSelect';
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'audio-input-btn';
+  btn.id = 'audioInputBtn';
+  container.appendChild(btn);
 
-  const defaultOpt = document.createElement('option');
-  defaultOpt.value = '';
-  defaultOpt.textContent = t('about.audioInputDefault');
-  select.appendChild(defaultOpt);
+  const dropdown = document.createElement('div');
+  dropdown.className = 'audio-input-dropdown hidden';
+  document.body.appendChild(dropdown);
 
-  async function refresh(withPermission = false) {
-    const current = getSavedDeviceId();
-    while (select.options.length > 1) select.remove(1);
+  let devices = [];
+  let open = false;
 
-    const devices = await listAudioInputs(withPermission);
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  function currentName() {
+    const id = getSavedDeviceId();
+    if (!id) return t('about.audioInputDefault');
+    const d = devices.find(x => x.deviceId === id);
+    return d?.label || t('about.audioInputMicrophone', { n: 1 });
+  }
+
+  function updateBtnLabel() {
+    btn.innerHTML = `
+      <span class="audio-input-btn-icon">🎤</span>
+      <span class="audio-input-btn-text">${escapeHtml(currentName())}</span>
+      <span class="audio-input-btn-chevron">▾</span>
+    `;
+  }
+
+  function makeOption(value, name, disabled = false) {
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'audio-input-option';
+    const isActive = value === getSavedDeviceId()
+      || (!value && !getSavedDeviceId());
+    if (isActive) el.classList.add('active');
+    if (disabled) { el.disabled = true; el.classList.add('disabled'); }
+    el.innerHTML = `
+      <span class="audio-input-option-check">${isActive ? '✓' : ''}</span>
+      <span class="audio-input-option-text">${escapeHtml(name)}</span>
+    `;
+    el.addEventListener('click', () => {
+      if (disabled) return;
+      setSavedDeviceId(value);
+      updateBtnLabel();
+      closeDropdown();
+    });
+    return el;
+  }
+
+  function renderOptions() {
+    dropdown.innerHTML = '';
+    dropdown.appendChild(makeOption('', t('about.audioInputDefault')));
     if (devices.length === 0) {
-      const none = document.createElement('option');
-      none.disabled = true;
-      none.textContent = t('about.audioInputNoDevices');
-      select.appendChild(none);
+      const empty = document.createElement('div');
+      empty.className = 'audio-input-empty';
+      empty.textContent = t('about.audioInputNoDevices');
+      dropdown.appendChild(empty);
       return;
     }
     devices.forEach((d, i) => {
-      const opt = document.createElement('option');
-      opt.value = d.deviceId;
-      // Без разрешения deviceId у всех пуст — не даём сохранить бессмысленный выбор
-      if (!d.deviceId && devices.length > 1) {
-        opt.disabled = true;
-        opt.textContent = t('about.audioInputMicrophone', { n: i + 1 });
-      } else {
-        opt.textContent = d.label || t('about.audioInputMicrophone', { n: i + 1 });
-      }
-      if (d.deviceId === current) opt.selected = true;
-      select.appendChild(opt);
+      const name = d.label || t('about.audioInputMicrophone', { n: i + 1 });
+      const disabled = !d.deviceId && devices.length > 1;
+      dropdown.appendChild(makeOption(d.deviceId, name, disabled));
     });
+  }
+
+  async function refresh(withPermission = false) {
+    devices = await listAudioInputs(withPermission);
+    const current = getSavedDeviceId();
     if (current && !devices.some(d => d.deviceId === current)) {
-      select.value = '';
       setSavedDeviceId('');
+    }
+    updateBtnLabel();
+  }
+
+  function positionDropdown() {
+    const rect = btn.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const showAbove = spaceBelow < 260 && rect.top > 260;
+    dropdown.style.position = 'fixed';
+    dropdown.style.left = rect.left + 'px';
+    dropdown.style.width = rect.width + 'px';
+    if (showAbove) {
+      dropdown.style.top = '';
+      dropdown.style.bottom = (window.innerHeight - rect.top + 4) + 'px';
+    } else {
+      dropdown.style.bottom = '';
+      dropdown.style.top = (rect.bottom + 4) + 'px';
     }
   }
 
-  select.addEventListener('change', () => setSavedDeviceId(select.value));
-  container.appendChild(select);
+  function onDocClick(e) {
+    if (btn.contains(e.target) || dropdown.contains(e.target)) return;
+    closeDropdown();
+  }
+  function onKeydown(e) {
+    if (e.key === 'Escape') closeDropdown();
+  }
+  function onScrollOrResize() { closeDropdown(); }
 
-  // Модалка видима? (offsetParent === null, если она display:none)
+  async function openDropdown() {
+    if (open) return;
+    await refresh(false);
+    renderOptions();
+    positionDropdown();
+    dropdown.classList.remove('hidden');
+    open = true;
+    btn.classList.add('open');
+    document.addEventListener('click', onDocClick, true);
+    document.addEventListener('keydown', onKeydown);
+    window.addEventListener('scroll', onScrollOrResize, true);
+    window.addEventListener('resize', onScrollOrResize);
+  }
+
+  function closeDropdown() {
+    if (!open) return;
+    dropdown.classList.add('hidden');
+    open = false;
+    btn.classList.remove('open');
+    document.removeEventListener('click', onDocClick, true);
+    document.removeEventListener('keydown', onKeydown);
+    window.removeEventListener('scroll', onScrollOrResize, true);
+    window.removeEventListener('resize', onScrollOrResize);
+  }
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (open) closeDropdown();
+    else openDropdown();
+  });
+
+  // Первичная загрузка
+  const initial = await listAudioInputs(false);
+  const hasLabels = initial.some(d => d.deviceId);
   const isVisible = container.offsetParent !== null;
-  const initialDevices = await listAudioInputs(false);
-  const hasLabels = initialDevices.some(d => d.deviceId);
 
-  // Разрешение запрашиваем один раз, только когда модалка реально открыта —
-  // иначе системный промпт всплывёт при запуске приложения.
   if (!hasLabels && !permissionAttempted && isVisible) {
     permissionAttempted = true;
-    await refresh(true);
+    devices = await listAudioInputs(true);
   } else {
-    await refresh(false);
+    devices = initial;
   }
+  updateBtnLabel();
+
+  // Экземпляр с методами destroy + updateLabels
+  activeInstance = {
+    destroy() {
+      closeDropdown();
+      if (dropdown.parentElement === document.body) dropdown.remove();
+    },
+    updateLabels() {
+      // Синхронно обновляем только тексты, без innerHTML='' и без await.
+      // Никаких мельканий — пользователь видит смену текста в одном кадре.
+      label.textContent = opts.title || t('about.audioInputLabel');
+      updateBtnLabel();
+      if (open) renderOptions();
+    }
+  };
 }
 
-// ---- Замена функциональности удалённой кнопки «Обновить» ----
+// ---- Глобальные подписки ----
 
-// 1) Браузер сам уведомляет, когда устройства подключили/отключили.
+// Смена языка — только обновление подписей, без пересборки DOM.
+window.addEventListener('langchange', () => {
+  if (activeInstance) activeInstance.updateLabels();
+});
+
+// Браузер сам уведомляет, когда устройства подключили/отключили
 if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
   navigator.mediaDevices.addEventListener('devicechange', () => {
     const container = document.getElementById('audioInputContainer');
@@ -131,9 +249,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
   });
 }
 
-// 2) При открытии модалки «О программе» — перерисовываем.
-//    setTimeout(0) гарантирует, что мы сработаем ПОСЛЕ того,
-//    как обработчик aboutBtn в app.js снимет с модалки display:none.
+// При открытии модалки «О программе» — перерисовываем
 const aboutBtn = document.getElementById('aboutBtn');
 if (aboutBtn) {
   aboutBtn.addEventListener('click', () => {
@@ -143,11 +259,3 @@ if (aboutBtn) {
     }, 0);
   });
 }
-
-// 3) Смена языка — как раньше.
-window.addEventListener('langchange', () => {
-  const container = document.getElementById('audioInputContainer');
-  if (container && container.children.length > 0) {
-    renderInputDeviceSelect(container);
-  }
-});

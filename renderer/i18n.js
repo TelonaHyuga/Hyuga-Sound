@@ -124,6 +124,9 @@ const DICT = {
     'about.audioInputDefault': 'По умолчанию (системное)',
     'about.audioInputNoDevices': 'Нет доступных устройств',
     'about.audioInputMicrophone': 'Микрофон {n}',
+    'about.audioInputHintDefault': 'Используется системное устройство',
+    'about.audioInputHintActive': 'Активно: {name}',
+    
   },
 
   en: {
@@ -234,6 +237,8 @@ const DICT = {
     'about.audioInputDefault': 'Default (system)',
     'about.audioInputNoDevices': 'No devices available',
     'about.audioInputMicrophone': 'Microphone {n}',
+    'about.audioInputHintDefault': 'Using system default device',
+    'about.audioInputHintActive': 'Active: {name}',
   },
 };
 
