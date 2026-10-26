@@ -194,7 +194,7 @@ function exportScene() {
 }
 
 // ============ IMPORT ============
-export function applySceneData(scene) {
+export function applySceneData(scene, topLevel) {
   const importedVerses = Array.isArray(scene.verses)
     ? scene.verses.map(sanitizeVerse).filter(Boolean)
     : [];
@@ -214,7 +214,16 @@ export function applySceneData(scene) {
   }
   applyImportedBattle(scene.battle);
   state.structure = sanitizeStructure(scene.structure);
-  state.capo = Number(scene.capo) || 0;
+
+  // КАПО: приоритет scene.capo, фолбэк на top-level capo (для ИИ-файлов, где capo уехал наверх)
+  const capoRaw = (scene && scene.capo !== undefined && scene.capo !== null)
+    ? scene.capo
+    : (topLevel && topLevel.capo);
+  const capoNum = Number(capoRaw);
+  state.capo = Number.isFinite(capoNum)
+    ? Math.max(0, Math.min(12, Math.trunc(capoNum)))
+    : 0;
+
   renderVerses();
   renderStructure();
   window.dispatchEvent(new CustomEvent('capo:changed', { detail: { capo: state.capo } }));
@@ -222,7 +231,7 @@ export function applySceneData(scene) {
 
 function importScene(text) {
   const parsed = parseHsnd(text);
-  applySceneData(parsed.scene);
+  applySceneData(parsed.scene, parsed);   // <-- второй аргумент
   showToast(t('scene.imported'), 'success');
 }
 
@@ -231,6 +240,9 @@ function clearScene() {
   if (!confirm(t('scene.clearConfirm'))) return;
   state.verses = []; state.activeVerseId = null; state.verseCounter = 0;
   state.structure = { lines: [], autoTitles: true };
+  state.capo = 0;
+  window.dispatchEvent(new CustomEvent('capo:changed', { detail: { capo: 0 } }));
+  
   initBattle(6);
   addVerse();
   renderStructure();

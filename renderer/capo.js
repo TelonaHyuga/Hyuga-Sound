@@ -39,6 +39,8 @@ if (capoBtn) {
   capoBtn.addEventListener('click', changeCapo);
 }
 
+// ОБНОВЛЕНИЕ ПОСЛЕ ИМПОРТА / ЛЮБОГО ИЗМЕНЕНИЯ КАПО
+window.addEventListener('capo:changed', updateCapoLabel);
 window.addEventListener('langchange', updateCapoLabel);
 
 updateCapoLabel();
